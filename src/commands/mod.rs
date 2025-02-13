@@ -1,1 +1,1 @@
-pub mod say;
+pub mod info;
