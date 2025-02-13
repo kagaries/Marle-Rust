@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 serenity = { version = "0.12", default-features = true, features = ["client", "gateway", "rustls_backend", "model", "collector", "cache"] }
 poise = "0.6.1"
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread", "full"] }
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 axum = "0.7.3"
@@ -15,3 +15,6 @@ shuttle-axum = "0.52.0"
 shuttle-runtime = "0.52.0"
 shuttle-serenity = "0.52.0"
 postgres = "0.19.10"
+tokio-postgres = "0.5.5"
+async-postgres = "0.5.1"
+chrono = "0.4.9"
