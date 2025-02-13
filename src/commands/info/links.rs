@@ -40,7 +40,7 @@ pub async fn links_command(
         Links::DreamGame => "https://www.roblox.com/games/5475056496/Dream-Game\nhttps://discord.gg/epicdepartment",
     };
 
-    ctx.send(CreateReply::default().content(response)).await?;
+    ctx.send(CreateReply::default().content(response).ephemeral(true)).await?;
 
     Ok(())
 }
