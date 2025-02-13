@@ -1,8 +1,7 @@
 mod commands;
 
 use shuttle_runtime::SecretStore;
-use commands::info::{age::age_command, links::links_command, say::say_command, serverinfo::serverinfo_command};
-use dotenv_codegen::dotenv;
+use commands::{fun::uc::uc_command, info::{age::age_command, links::links_command, say::say_command, serverinfo::serverinfo_command}};
 use poise::serenity_prelude as serenity;
 
 pub struct Data {} // User data, which is stored and accessible in all command invocations
@@ -17,7 +16,7 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![age_command(), serverinfo_command(), links_command(), say_command()],
+            commands: vec![age_command(), serverinfo_command(), links_command(), say_command(), uc_command()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
