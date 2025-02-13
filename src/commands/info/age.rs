@@ -1,5 +1,4 @@
-use poise::CreateReply;
-use crate::{main, Data, Error, Context};
+use crate::{Error, Context};
 use serenity::all::User;
 
 #[poise::command(slash_command, rename = "age")]

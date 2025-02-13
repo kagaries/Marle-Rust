@@ -1,6 +1,6 @@
 use poise::CreateReply;
 use serenity::all::{CreateEmbed, CreateEmbedFooter, PremiumTier};
-use crate::{main, Data, Error, Context};
+use crate::{Error, Context};
 
 #[poise::command(slash_command, rename = "serverinfo")]
 pub async fn serverinfo_command(

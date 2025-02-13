@@ -1,8 +1,8 @@
 use poise::{ChoiceParameter, CreateReply};
-use crate::{main, Data, Error, Context};
+use crate::{Error, Context};
 
 #[derive(poise::ChoiceParameter)]
-enum links {
+enum Links {
     BetterDiscovery,
     Deepboken,
     DID,
@@ -12,12 +12,12 @@ enum links {
 #[poise::command(slash_command, rename = "links")]
 pub async fn links_command(
     ctx: Context<'_>,
-    #[description = "link to be gotten"] link: links,
+    #[description = "link to be gotten"] link: Links,
 ) -> Result<(), Error> {
     let response = match link {
-        links::BetterDiscovery => "https://www.roblox.com/games/15317947079/better-discovery",
-        links::Deepboken => "https://tenor.com/view/the-owl-deepwoken-gif-4915453637006314785",
-        links::DID => "# What are systems?
+        Links::BetterDiscovery => "https://www.roblox.com/games/15317947079/better-discovery",
+        Links::Deepboken => "https://tenor.com/view/the-owl-deepwoken-gif-4915453637006314785",
+        Links::DID => "# What are systems?
                     Systems are what the body is called when there are multiple people within it. When you speak to a system, **you may not always be talking to the person you know**.
 
                     You may notice personality shifts and memory gaps, **alters do not remember what other alters were doing**, they only have their own memories, although depending on the system they may share memories, it varies
@@ -37,7 +37,7 @@ pub async fn links_command(
                     if you wish to do your own research feel free to do so here https://did-research.org/
 
                     https://morethanone.info/",
-        links::DreamGame => "https://www.roblox.com/games/5475056496/Dream-Game\nhttps://discord.gg/epicdepartment",
+        Links::DreamGame => "https://www.roblox.com/games/5475056496/Dream-Game\nhttps://discord.gg/epicdepartment",
     };
 
     if link.name().to_string() == "DID" {

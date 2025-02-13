@@ -1,5 +1,5 @@
 use poise::CreateReply;
-use crate::{main, Data, Error, Context};
+use crate::{Error, Context};
 
 #[poise::command(slash_command, description_localized("en-US", "Sends a message with the bot"))]
 pub async fn say_command(

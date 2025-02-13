@@ -3,7 +3,7 @@ use std::env;
 mod commands;
 
 use commands::info::{age::age_command, links::links_command, say::say_command, serverinfo::serverinfo_command};
-use poise::{serenity_prelude as serenity, ChoiceParameter, CreateReply};
+use poise::serenity_prelude as serenity;
 
 pub struct Data {} // User data, which is stored and accessible in all command invocations
 type Error = Box<dyn std::error::Error + Send + Sync>;
@@ -30,7 +30,7 @@ async fn main() {
         .build();
 
     // Build our client.
-    let mut client = serenity::Client::builder(token, intents)
+    let client = serenity::Client::builder(token, intents)
         .framework(framework)
         .await;
     client.unwrap().start().await.unwrap();
