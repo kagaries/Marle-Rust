@@ -1,11 +1,12 @@
+use std::env;
 
 use async_postgres::connect;
 use chrono::Local;
 use poise::CreateReply;
 use serenity::all::{CreateEmbed, CreateEmbedFooter};
+use shuttle_runtime::SecretStore;
 use tokio::spawn;
 use crate::{Error as OtherError, Context};
-use dotenv_codegen::dotenv;
 
 #[poise::command(slash_command, rename = "uc", subcommands("execute", "create", "remove", "get"))]
 pub async fn uc_command(
@@ -19,7 +20,7 @@ pub async fn execute(
     ctx: Context<'_>,
     command: String
 ) -> Result<(), OtherError> { 
-    let (client, conn) = connect(dotenv!("DB_LINK").parse()?).await?;
+    let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
     
@@ -48,7 +49,7 @@ pub async fn create(
     #[min_length = 1] #[max_length = 1000] sends: String,
     #[min_length = 1] #[max_length = 250] description: String
 ) -> Result<(), OtherError> { 
-    let (client, conn) = connect(dotenv!("DB_LINK").parse()?).await?;
+    let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
 
@@ -73,7 +74,7 @@ pub async fn remove(
     command: String
 ) -> Result<(), OtherError> {
 
-    let (client, conn) = connect(dotenv!("DB_LINK").parse()?).await?;
+    let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
     
@@ -102,7 +103,7 @@ pub async fn get(
     command: String
 ) -> Result<(), OtherError> {
 
-    let (client, conn) = connect(dotenv!("DB_LINK").parse()?).await?;
+    let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
     

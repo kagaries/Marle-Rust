@@ -42,6 +42,8 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
     let token = secrets.get("DISCORD_TOKEN").unwrap();
     let intents = serenity::GatewayIntents::non_privileged();
 
+    std::env::set_var("DB_LINK", secrets.get("DB_LINK").unwrap());
+
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
             commands: vec![age_command(), serverinfo_command(), links_command(), say_command(), uc_command()],
