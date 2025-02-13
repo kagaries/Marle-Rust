@@ -4,7 +4,6 @@ use async_postgres::connect;
 use chrono::Local;
 use poise::CreateReply;
 use serenity::all::{CreateEmbed, CreateEmbedFooter};
-use shuttle_runtime::SecretStore;
 use tokio::spawn;
 use crate::{Error as OtherError, Context};
 
