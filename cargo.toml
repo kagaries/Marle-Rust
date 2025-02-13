@@ -1,10 +1,7 @@
-[env]
-DISCORD_TOKEN = "MTE2MTQyMzg2MzQ4MjE1OTIzNA.G0Zxd0.FzvuVHTe5yUHya__kKu0URaXzAohQWEDnkJjzU"
-
 [package]
-name = "main"
-version = "0.1.0"
-authors = ["my name <my@email.address>"]
+name = "marle-rust"
+version = "0.0.1"
+authors = ["Kagaries <kagarieswinnfield@gmail.com>"]
 edition = "2018"
 
 [dependencies]
