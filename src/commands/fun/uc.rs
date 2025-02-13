@@ -1,20 +1,20 @@
 
 use async_postgres::connect;
-use chrono::{Local, NaiveDate};
+use chrono::Local;
 use poise::CreateReply;
-use serenity::{all::{CreateEmbed, CreateEmbedFooter}, FutureExt};
-use tokio::{spawn, task};
+use serenity::all::{CreateEmbed, CreateEmbedFooter};
+use tokio::spawn;
 use crate::{Error as OtherError, Context};
 use dotenv_codegen::dotenv;
 
 #[poise::command(slash_command, rename = "uc", subcommands("execute", "create", "remove", "get"))]
 pub async fn uc_command(
-    ctx: Context<'_>
+    _ctx: Context<'_>
 ) -> Result<(), OtherError> {
     Ok(())
 }
 
-#[poise::command(slash_command)]
+#[poise::command(slash_command, description_localized("en-US", "Executes a user command"))]
 pub async fn execute(
     ctx: Context<'_>,
     command: String
@@ -35,18 +35,18 @@ pub async fn execute(
 
         ctx.say(&to_send).await?;
     } else {
-        println!("No results found for command: {}", command);
+        ctx.say(format!("Unable to find command: {}", command)).await?;
     }
 
 
     Ok(())
 }
-#[poise::command(slash_command)]
+#[poise::command(slash_command, description_localized("en-US", "Creates a new user command"))]
 pub async fn create(
     ctx: Context<'_>,
-    name: String,
-    sends: String,
-    description: String
+    #[min_length = 1] #[max_length = 50] name: String,
+    #[min_length = 1] #[max_length = 1000] sends: String,
+    #[min_length = 1] #[max_length = 250] description: String
 ) -> Result<(), OtherError> { 
     let (client, conn) = connect(dotenv!("DB_LINK").parse()?).await?;
 
@@ -54,8 +54,8 @@ pub async fn create(
 
     let rows = client.query("SELECT * FROM commands WHERE name = $1", &[&name]).await?;
 
-    if let Some(row) = rows.get(0) {
-        println!("Command exists!");
+    if let Some(_row) = rows.get(0) {
+        ctx.say("Command already exists!").await?;
     } else {
         let now = Local::now();
         let formatted = now.format("%Y-%m-%d %H:%M:%S").to_string();
@@ -67,7 +67,7 @@ pub async fn create(
 
     Ok(())
 }
-#[poise::command(slash_command)]
+#[poise::command(slash_command, description_localized("en-US", "Removes a user command you've created"))]
 pub async fn remove(
     ctx: Context<'_>, 
     command: String
@@ -83,7 +83,7 @@ pub async fn remove(
         let name: String = row.get(0);
         let author: String = row.get(1);
 
-        if (ctx.author().id.get().to_string().contains(&author)) {
+        if ctx.author().id.get().to_string().contains(&author) {
             client.execute("DELETE FROM commands WHERE name = $1", &[&command]).await?;
 
             ctx.say(format!("Deleted: {}", name)).await?;
@@ -91,12 +91,12 @@ pub async fn remove(
             ctx.say("You do not own this command.").await?;
         }
     } else {
-        println!("No results found for command: {}", command);
+        ctx.say(format!("Unable to find command: {}", command)).await?;
     }
 
     Ok(()) 
 }
-#[poise::command(slash_command)]
+#[poise::command(slash_command, description_localized("en-US", "Grabs info about a user command"))]
 pub async fn get(
     ctx: Context<'_>, 
     command: String
@@ -123,7 +123,7 @@ pub async fn get(
 
         ctx.send(CreateReply::default().embed(embed)).await?;
     } else {
-        println!("No results found for command: {}", command);
+        ctx.say(format!("Unable to find command: {}", command)).await?;
     }
 
     Ok(()) 

@@ -1,7 +1,7 @@
 use crate::{Error, Context};
 use serenity::all::User;
 
-#[poise::command(slash_command, rename = "age")]
+#[poise::command(slash_command, rename = "age", description_localized("en-US", "Gets yours an another users age"))]
 pub async fn age_command(
     ctx: Context<'_>,
     #[description = "Selected user"] user: Option<User>,

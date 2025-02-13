@@ -9,7 +9,7 @@ enum Links {
     DreamGame
 }
 
-#[poise::command(slash_command, rename = "links")]
+#[poise::command(slash_command, rename = "links", description_localized("en-US", "Find helpful links!"))]
 pub async fn links_command(
     ctx: Context<'_>,
     #[description = "link to be gotten"] link: Links,

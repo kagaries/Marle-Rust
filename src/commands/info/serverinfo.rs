@@ -2,7 +2,7 @@ use poise::CreateReply;
 use serenity::all::{CreateEmbed, CreateEmbedFooter, PremiumTier};
 use crate::{Error, Context};
 
-#[poise::command(slash_command, rename = "serverinfo")]
+#[poise::command(slash_command, rename = "serverinfo", description_localized("en-US", "Grabs info about the server it's used in"))]
 pub async fn serverinfo_command(
     ctx: Context<'_>,
 ) -> Result<(), Error> {
