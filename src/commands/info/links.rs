@@ -1,4 +1,4 @@
-use poise::{ChoiceParameter, CreateReply};
+use poise::CreateReply;
 use crate::{Error, Context};
 
 #[derive(poise::ChoiceParameter)]
@@ -40,10 +40,7 @@ pub async fn links_command(
         Links::DreamGame => "https://www.roblox.com/games/5475056496/Dream-Game\nhttps://discord.gg/epicdepartment",
     };
 
-    if link.name().to_string() == "DID" {
-        ctx.send(CreateReply::default().content(response)).await?;
-    } else {
-        ctx.say(response).await?;
-    };
+    ctx.send(CreateReply::default().content(response)).await?;
+
     Ok(())
 }
