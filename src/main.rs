@@ -1,9 +1,12 @@
 use std::env;
 
-use poise::{serenity_prelude as serenity, ChoiceParameter, CreateReply};
-use ::serenity::{all::{CreateEmbed, CreateEmbedFooter, EmbedField, PremiumTier}, futures::TryFutureExt};
+mod commands;
 
-struct Data {} // User data, which is stored and accessible in all command invocations
+use commands::say::say_command;
+use poise::{serenity_prelude as serenity, ChoiceParameter, CreateReply};
+use ::serenity::all::{CreateEmbed, CreateEmbedFooter, PremiumTier};
+
+pub struct Data {} // User data, which is stored and accessible in all command invocations
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
@@ -116,7 +119,7 @@ async fn main() {
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![age(), say(), serverinfo(), links()],
+            commands: vec![age(), say(), serverinfo(), links(), say_command()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
