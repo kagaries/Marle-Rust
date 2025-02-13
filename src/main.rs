@@ -4,7 +4,7 @@ mod util;
 
 use events::basic::ready_event::handle_ready_event;
 use shuttle_runtime::SecretStore;
-use commands::{fun::{confess::confess_command, uc::uc_command}, info::{age::age_command, links::links_command, say::say_command, serverinfo::serverinfo_command}};
+use commands::{fun::{confess::confess_command, uc::uc_command}, info::{age::age_command, links::links_command, ping::ping_command, say::say_command, serverinfo::serverinfo_command}};
 use poise::serenity_prelude as serenity;
 
 use util::remove_unused_commands;
@@ -27,7 +27,8 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
         links_command(),
         say_command(),
         uc_command(),
-        confess_command()
+        confess_command(),
+        ping_command()
     ];
 
     let framework = poise::Framework::builder()
