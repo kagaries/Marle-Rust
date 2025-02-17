@@ -1,10 +1,19 @@
+/*
+
+
+
+*/
+
+//Import anything we need from folders and files using 'mod'
 mod commands;
 mod events;
 mod util;
+mod handlers;
 
-use events::basic::ready_event::handle_ready_event;
+//Use all the things we imported from 'mod'
+use handlers::event_handler::event_handler;
 use shuttle_runtime::SecretStore;
-use commands::{fun::{confess::confess_command, uc::uc_command}, info::{age::age_command, links::links_command, ping::ping_command, say::say_command, serverinfo::serverinfo_command}};
+use commands::{fun::{confess::confess_command, uc::uc_command}, info::{age::age_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::{ban::ban_command, kick::kick_command, timeout::timeout_command}};
 use poise::serenity_prelude as serenity;
 
 use util::remove_unused_commands;
@@ -25,10 +34,12 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
         age_command(),
         serverinfo_command(),
         links_command(),
-        say_command(),
         uc_command(),
         confess_command(),
-        ping_command()
+        ping_command(),
+        timeout_command(),
+        kick_command(),
+        ban_command()
     ];
 
     let framework = poise::Framework::builder()
@@ -56,19 +67,4 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
         
 
     Ok(client.into())
-}
-
-async fn event_handler(
-    ctx: &serenity::Context,
-    event: &serenity::FullEvent,
-    _framework: poise::FrameworkContext<'_, Data, Error>,
-    _data: &Data,
-) -> Result<(), Error> {
-    match event {
-        serenity::FullEvent::Ready { data_about_bot, .. } => {
-            handle_ready_event(ctx, data_about_bot).await;
-        }
-        _ => {}
-    }
-    Ok(())
 }

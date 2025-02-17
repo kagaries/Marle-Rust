@@ -11,9 +11,9 @@ pub async fn remove_unused_commands(ctx: &Context) -> serenity::Result<()> {
         "age",
         "serverinfo",
         "links",
-        "say_command",
         "uc",
-        "ping_command"
+        "ping_command",
+        "timeout"
     ]
     .into_iter()
     .collect();
