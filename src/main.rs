@@ -59,7 +59,7 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
             _ready: &serenity::Ready, 
             framework: &poise::Framework<Data, Box<dyn std::error::Error + Send + Sync>> | {
             Box::pin(async move {
-                remove_unused_commands(ctx).await?;
+                remove_unused_commands(ctx, framework).await?;
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 Ok(Data {})
             })
