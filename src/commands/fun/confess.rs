@@ -4,7 +4,7 @@ use serenity::all::{CreateEmbed, CreateEmbedFooter, CreateMessage};
 
 #[poise::command(slash_command, rename = "confess")]
 pub async fn confess_command(
-    _ctx: crate::Context<'_>,
+    ctx: crate::Context<'_>,
     string: String,
 ) -> Result<(), crate::Error> {
     let now = Local::now();
@@ -15,11 +15,11 @@ pub async fn confess_command(
     .description(format!("'{}'", string))
     .footer(CreateEmbedFooter::new(formatted));
 
-    if let Some(channel) = _ctx.guild_channel().await {
-        channel.send_message(_ctx.http(), CreateMessage::new().add_embed(embed)).await?;
+    if let Some(channel) = ctx.guild_channel().await {
+        channel.send_message(ctx.http(), CreateMessage::new().add_embed(embed)).await?;
     }
 
-    _ctx.send(CreateReply::default().content("Complete").ephemeral(true)).await?;
+    ctx.send(CreateReply::default().content("Complete").ephemeral(true)).await?;
 
     Ok(())
 }
