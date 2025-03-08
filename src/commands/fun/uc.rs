@@ -54,6 +54,13 @@ pub async fn create(
 
     let rows = client.query("SELECT * FROM commands WHERE name = $1", &[&name]).await?;
 
+    let total_num_of_commands: i64 = client.query_one("SELECT COUNT(*) AS exact_count FROM commands WHERE author = $1", &[&ctx.author().id.get().to_string()]).await?.get(0);
+
+    if total_num_of_commands >= 100 {
+        ctx.say("You've created too many commands!").await?;
+        return Ok(());
+    }
+
     if let Some(_row) = rows.get(0) {
         ctx.say("Command already exists!").await?;
     } else {
