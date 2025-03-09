@@ -3,11 +3,12 @@ use std::env;
 use async_postgres::connect;
 use chrono::Local;
 use poise::CreateReply;
-use serenity::all::{CreateEmbed, CreateEmbedFooter};
+use serenity::all::{CreateEmbed, CreateEmbedFooter, User};
+use similar_string::find_best_similarity;
 use tokio::spawn;
 use crate::{Error as OtherError, Context};
 
-#[poise::command(slash_command, rename = "uc", subcommands("execute", "create", "remove", "get"))]
+#[poise::command(slash_command, rename = "uc", subcommands("execute", "create", "remove", "get", "wipe", "getall"))]
 pub async fn uc_command(
     _ctx: Context<'_>
 ) -> Result<(), OtherError> {
@@ -35,7 +36,23 @@ pub async fn execute(
 
         ctx.say(&to_send).await?;
     } else {
-        ctx.say(format!("Unable to find command: {}", command)).await?;
+        let options: Vec<String> = client.query("SELECT name FROM commands", &[])
+        .await?
+        .iter()
+        .map(|row| {
+            row.get::<_, String>(0).to_string()
+        })
+        .collect();
+
+        let best_match = find_best_similarity(command, &options);
+        let string_thing = best_match.unwrap().0;
+        println!("{:?}", string_thing);
+
+        if !string_thing.is_empty() {
+            ctx.say(format!("Unable to find command. Did you mean ``{}``?", string_thing)).await?;
+        } else {
+            ctx.say("Unable to find command.").await?;
+        }
     }
 
 
@@ -103,6 +120,62 @@ pub async fn remove(
 
     Ok(()) 
 }
+
+#[poise::command(slash_command, description_localized("en-US", "Removes all user commands you've created"))]
+pub async fn wipe(
+    ctx: Context<'_>
+) -> Result<(), OtherError> {
+
+    let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
+
+    spawn(conn);
+    
+    let rows = client.query("SELECT * FROM commands WHERE author = $1", &[&ctx.author().id.to_string()]).await?;
+
+    if !rows.is_empty() {
+        client.execute("DELETE FROM commands WHERE author = $1", &[&ctx.author().id.to_string()]).await?;
+    
+        ctx.say("All commands for this author have been removed.").await?;
+    } else {
+        ctx.say("No commands found for this author.").await?;
+    }
+
+    Ok(()) 
+}
+
+#[poise::command(slash_command, description_localized("en-US", "Gets all the commands a user has created"))]
+pub async fn getall(
+    ctx: Context<'_>,
+    user: User
+) -> Result<(), OtherError> {
+
+    let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
+
+    spawn(conn);
+    
+    let rows = client.query("SELECT * FROM commands WHERE author = $1", &[&user.id.to_string()]).await?;
+
+    if rows.is_empty() {
+        ctx.say("No commands found for this author.").await?;
+        return Ok(());
+    }
+
+    let commands: Vec<String> = rows.iter()
+        .map(|row| row.get::<_, String>(0))
+        .collect();
+
+    let command_list = commands.join("\n");
+
+    if command_list.chars().count() > 4000 {
+        ctx.send(CreateReply::default().content("Please wait for me to add support for high character count :3").ephemeral(true)).await?;
+        return Ok(());
+    }
+
+    ctx.send(CreateReply::default().content(command_list).ephemeral(true)).await?;
+
+    Ok(()) 
+}
+
 #[poise::command(slash_command, description_localized("en-US", "Grabs info about a user command"))]
 pub async fn get(
     ctx: Context<'_>, 
