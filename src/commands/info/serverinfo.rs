@@ -15,6 +15,10 @@ pub async fn serverinfo_command(
         _ => "Unknown boost level",
     };
 
+    let member_count= ctx.guild_id().unwrap().members(ctx.http(), None, None).await?.len();
+    let bot_count = ctx.guild_id().unwrap().members(ctx, None, None).await?.iter().filter(|member| member.user.bot).count();
+    let non_bot_count = member_count - bot_count;
+
     let m = CreateReply::default();
     let embed = CreateEmbed::new()
     .title(ctx.guild().as_ref().unwrap().name.clone())
@@ -24,7 +28,7 @@ pub async fn serverinfo_command(
     .field("Vanity:", ctx.guild().as_ref().unwrap().vanity_url_code.clone().unwrap_or("No vanity".to_string()).to_string(), true)
     .field("Boost Tier:", boost_level, true)
     .field("Role Amount:", ctx.guild().as_ref().unwrap().roles.capacity().to_string(), true)
-    .field("Member Count:", ctx.guild().as_ref().unwrap().member_count.to_string(), true)
+    .field("Member Count:", non_bot_count.to_string(), true)
     .footer(CreateEmbedFooter::new(format!("ID: {}", ctx.guild().as_ref().unwrap().id.get().to_string()))); 
 
     ctx.send(m.embed(embed)).await?;

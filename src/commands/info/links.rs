@@ -6,7 +6,8 @@ enum Links {
     BetterDiscovery,
     Deepboken,
     DID,
-    DreamGame
+    DreamGame,
+    CatGPT,
 }
 
 #[poise::command(slash_command, rename = "links", description_localized("en-US", "Find helpful links!"))]
@@ -15,6 +16,7 @@ pub async fn links_command(
     #[description = "link to be gotten"] link: Links,
 ) -> Result<(), Error> {
     let response = match link {
+        Links::CatGPT => "https://catgpt.wvd.io/",
         Links::BetterDiscovery => "https://www.roblox.com/games/15317947079/better-discovery",
         Links::Deepboken => "https://tenor.com/view/the-owl-deepwoken-gif-4915453637006314785",
         Links::DID => "# What are systems?
