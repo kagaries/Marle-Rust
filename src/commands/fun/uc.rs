@@ -15,10 +15,40 @@ pub async fn uc_command(
     Ok(())
 }
 
+async fn execute_command_callback<'a>(
+    _ctx: Context<'a>, 
+    partial: &str
+) -> Vec<String> {
+    let db_url = match env::var("DB_LINK") {
+        Ok(url) => url,
+        Err(_) => return vec!["DB_LINK not set".to_string()],
+    };
+
+    let (client, conn) = match connect(db_url.parse().expect("Invalid DB URL")).await {
+        Ok((client, conn)) => (client, conn),
+        Err(_) => return vec!["Failed to connect to DB".to_string()],
+    };
+
+
+    spawn(conn);
+
+    let rows = match client.query(
+        "SELECT name FROM commands WHERE name ILIKE $1 LIMIT 25",
+        &[&format!("%{}%", partial)],
+    ).await {
+        Ok(rows) => rows,
+        Err(_) => return vec!["Query failed".to_string()],
+    };
+
+    // Extract command names from the result
+    rows.iter().map(|row| row.get::<_, String>(0)).collect()
+}
+
 #[poise::command(slash_command, description_localized("en-US", "Executes a user command"))]
 pub async fn execute(
     ctx: Context<'_>,
-    command: String
+    #[autocomplete = "execute_command_callback"]
+    command: String,
 ) -> Result<(), OtherError> { 
     let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
@@ -179,6 +209,7 @@ pub async fn getall(
 #[poise::command(slash_command, description_localized("en-US", "Grabs info about a user command"))]
 pub async fn get(
     ctx: Context<'_>, 
+    #[autocomplete = "execute_command_callback"]
     command: String
 ) -> Result<(), OtherError> {
 

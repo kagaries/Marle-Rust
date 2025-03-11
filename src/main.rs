@@ -18,6 +18,7 @@ type Context<'a> = poise::Context<'a, Data, Error>; //The context of the data be
 //The main shuttle runtime function, allows it to use content from Secrets.toml and deploy using shuttle.
 #[shuttle_runtime::main]
 async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle_serenity::ShuttleSerenity {
+    std::env::set_var("RUST_BACKTRACE", "1");
     //Configure the client with your Discord bot token in the environment.
     let token: String = secrets.get("DISCORD_TOKEN").unwrap();
 
