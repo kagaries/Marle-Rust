@@ -29,7 +29,6 @@ async fn execute_command_callback<'a>(
         Err(_) => return vec!["Failed to connect to DB".to_string()],
     };
 
-
     spawn(conn);
 
     let rows = match client.query(
@@ -39,8 +38,7 @@ async fn execute_command_callback<'a>(
         Ok(rows) => rows,
         Err(_) => return vec!["Query failed".to_string()],
     };
-
-    // Extract command names from the result
+    
     rows.iter().map(|row| row.get::<_, String>(0)).collect()
 }
 
@@ -76,7 +74,6 @@ pub async fn execute(
 
         let best_match = find_best_similarity(command, &options);
         let string_thing = best_match.unwrap().0;
-        println!("{:?}", string_thing);
 
         if !string_thing.is_empty() {
             ctx.say(format!("Unable to find command. Did you mean ``{}``?", string_thing)).await?;
@@ -88,6 +85,7 @@ pub async fn execute(
 
     Ok(())
 }
+
 #[poise::command(slash_command, description_localized("en-US", "Creates a new user command"))]
 pub async fn create(
     ctx: Context<'_>,
@@ -100,6 +98,31 @@ pub async fn create(
     spawn(conn);
 
     let rows = client.query("SELECT * FROM commands WHERE name = $1", &[&name]).await?;
+
+    let table = client.query_one(
+        "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'blacklist')",
+        &[]
+    ).await?;
+
+    let table_exists: bool = table.get(0);
+
+    if table_exists == true {
+        let blacklist = client.query("SELECT * FROM blacklist WHERE id = $1", &[&ctx.author().id.to_string()]).await?;
+
+        if let Some(_blacklist) = blacklist.get(0) {
+            ctx.send(CreateReply::default().content("You are blacklisted from creating more commands!").ephemeral(true)).await?;
+            return Ok(());
+        }
+    } else {
+        print!("done!");
+        client.execute(
+            "CREATE TABLE blacklist (
+                id TEXT PRIMARY KEY
+            )",
+            &[],
+        )
+        .await?;
+    }
 
     let total_num_of_commands: i64 = client.query_one("SELECT COUNT(*) AS exact_count FROM commands WHERE author = $1", &[&ctx.author().id.get().to_string()]).await?.get(0);
 
@@ -136,6 +159,14 @@ pub async fn remove(
     if let Some(row) = rows.get(0) {
         let name: String = row.get(0);
         let author: String = row.get(1);
+
+        if ctx.author().id.get().to_string() == "536076925706305536" {
+            client.execute("DELETE FROM commands WHERE name = $1", &[&command]).await?;
+
+            ctx.say(format!("Admin Deleted: {}", name)).await?;
+            
+            return Ok(())
+        }
 
         if ctx.author().id.get().to_string().contains(&author) {
             client.execute("DELETE FROM commands WHERE name = $1", &[&command]).await?;

@@ -7,7 +7,7 @@ mod handlers;
 use handlers::event_handler::event_handler;
 use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
-use commands::{fun::uc::uc_command, info::{age::age_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::{ban::ban_command, kick::kick_command, timeout::timeout_command}};
+use commands::{fun::uc::uc_command, info::{age::age_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::{ban::ban_command, blacklist::blacklist_command, kick::kick_command, timeout::timeout_command}};
 use poise::serenity_prelude as serenity;
 use util::remove_unused_commands;
 
@@ -24,7 +24,7 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
 
     //The gateway intents we want and/or will use for events and commands.
     //non_privileged gets all intents not considered privileged by discord.
-    let intents: GatewayIntents = serenity::GatewayIntents::non_privileged();
+    let intents: GatewayIntents = GatewayIntents::non_privileged() | serenity::GatewayIntents::MESSAGE_CONTENT;
 
     //Sets the "DB_LINK" field for the process environment.
     std::env::set_var("DB_LINK", secrets.get("DB_LINK").unwrap());
@@ -39,12 +39,17 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
         ping_command(),
         timeout_command(),
         kick_command(),
-        ban_command()
+        ban_command(),
+        blacklist_command()
     ];
 
     //The poise framework to load the commands and event handler for use with the bot.
     let framework: poise::Framework<Data, Box<dyn std::error::Error + Send + Sync>> = poise::Framework::builder()
         .options(poise::FrameworkOptions {
+            prefix_options: poise::PrefixFrameworkOptions {
+                prefix: Some("m&".into()),
+                ..Default::default()
+            },
             commands: cmds,
             event_handler: |
             ctx: &::serenity::prelude::Context,
