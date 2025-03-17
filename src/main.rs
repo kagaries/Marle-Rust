@@ -7,7 +7,7 @@ mod handlers;
 use handlers::event_handler::event_handler;
 use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
-use commands::{fun::uc::uc_command, info::{age::age_command, info::info_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::{ban::ban_command, blacklist::blacklist_command, kick::kick_command, timeout::timeout_command}};
+use commands::{fun::uc::uc_command, info::{age::age_command, info::info_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::blacklist::blacklist_command};
 use poise::serenity_prelude as serenity;
 use util::remove_unused_commands;
 
@@ -37,9 +37,9 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
         uc_command(),
         //confess_command(),
         ping_command(),
-        timeout_command(),
-        kick_command(),
-        ban_command(),
+        //timeout_command(),
+        //kick_command(),
+        //ban_command(),
         blacklist_command(),
         info_command()
     ];
