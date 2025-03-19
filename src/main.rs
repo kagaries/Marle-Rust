@@ -90,7 +90,6 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
         .framework(framework)
         .await
         .expect("err");
-        
 
     Ok(client.into())
 }

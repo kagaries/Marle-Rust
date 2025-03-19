@@ -1,5 +1,5 @@
 use poise::serenity_prelude as serenity;
-use ::serenity::all::{CacheHttp, ChannelId};
+use ::serenity::all::{ActivityData, CacheHttp, ChannelId};
 
 //The event called from the event_handler.
 //Events can have different variables, and will most likely never match each other.
@@ -7,6 +7,8 @@ pub async fn handle_ready_event(ctx: &serenity::Context, data_about_bot : &seren
     let commit = std::env::var("LAST_COMMIT").unwrap();
 
     println!("Logged in as {}", data_about_bot.user.name);
+
+    ctx.set_presence(Some(ActivityData::custom("Hi")), serenity::OnlineStatus::Online);
 
     //The channel id of where we want to send our message for this ready event.
     //This should be changed to a channel id it has access to, or be changed to not send a message.
