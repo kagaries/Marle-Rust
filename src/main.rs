@@ -4,7 +4,6 @@ mod events;
 mod util;
 mod handlers;
 
-use git2::Repository;
 use handlers::event_handler::event_handler;
 use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
@@ -17,6 +16,7 @@ type Error = Box<dyn std::error::Error + Send + Sync>; //Main type used for erro
 type Context<'a> = poise::Context<'a, Data, Error>; //The context of the data being used.
 //The main shuttle runtime function, allows it to use content from Secrets.toml and deploy using shuttle.
 
+/* 
 fn get_commit() -> Result<(), git2::Error> {
     let repo = match Repository::open("../") {
         Ok(repo) => repo,
@@ -32,10 +32,11 @@ fn get_commit() -> Result<(), git2::Error> {
 
     Ok(())
 }
+*/
 
 #[shuttle_runtime::main]
 async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle_serenity::ShuttleSerenity {
-    let _ = get_commit();
+    //let _ = get_commit();
     std::env::set_var("RUST_BACKTRACE", "1");
     //Configure the client with your Discord bot token in the environment.
     let token: String = secrets.get("DISCORD_TOKEN").unwrap();
