@@ -4,6 +4,7 @@ use ::serenity::all::{CacheHttp, ChannelId};
 //The event called from the event_handler.
 //Events can have different variables, and will most likely never match each other.
 pub async fn handle_ready_event(ctx: &serenity::Context, data_about_bot : &serenity::Ready) {
+    let commit = std::env::var("LAST_COMMIT").unwrap();
 
     println!("Logged in as {}", data_about_bot.user.name);
 
@@ -15,7 +16,7 @@ pub async fn handle_ready_event(ctx: &serenity::Context, data_about_bot : &seren
     //Attempts to send the message "Bot is online!" to the target channel id.
     //On error it prints "Error sending message: " along with the reason for the error.
 
-    if let Err(why) = channel_id.say(ctx.http(), "Marle is online!").await {
+    if let Err(why) = channel_id.say(ctx.http(), format!("Marle is online! Latest Commit: {}", commit)).await {
         println!("Error sending message: {:?}", why);
     }
 }
