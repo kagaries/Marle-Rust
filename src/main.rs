@@ -18,7 +18,10 @@ type Context<'a> = poise::Context<'a, Data, Error>; //The context of the data be
 //The main shuttle runtime function, allows it to use content from Secrets.toml and deploy using shuttle.
 
 fn get_commit() -> Result<(), git2::Error> {
-    let repo = Repository::open(".").unwrap();
+    let repo = match Repository::open(".") {
+        Ok(repo) => repo,
+        Err(e) => panic!("failed to open: {}", e),
+    };
 
     let head= repo.head().unwrap();
     let commit = head.peel_to_commit().unwrap();
