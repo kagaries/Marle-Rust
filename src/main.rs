@@ -7,7 +7,7 @@ mod handlers;
 use handlers::event_handler::event_handler;
 use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
-use commands::{fun::uc::uc_command, info::{age::age_command, info::info_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::blacklist::blacklist_command};
+use commands::{fun::{say::say_command, uc::uc_command}, info::{age::age_command, info::info_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::blacklist::blacklist_command};
 use poise::serenity_prelude as serenity;
 use util::remove_unused_commands;
 
@@ -35,13 +35,10 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
         serverinfo_command(),
         links_command(),
         uc_command(),
-        //confess_command(),
         ping_command(),
-        //timeout_command(),
-        //kick_command(),
-        //ban_command(),
         blacklist_command(),
-        info_command()
+        info_command(),
+        say_command()
     ];
 
     //The poise framework to load the commands and event handler for use with the bot.
