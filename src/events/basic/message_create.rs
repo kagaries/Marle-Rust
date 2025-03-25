@@ -7,31 +7,33 @@ use ::serenity::all::{CacheHttp, EditMessage};
 pub async fn handle_message_event(_ctx: &serenity::Context, message : &serenity::Message) {
 
     if message.guild_id != None {
-        let regex = Regex::new(r"(https?:\/\/(?:www\.)?(x\.com|twitter\.com|reddit\.com|instagram\.com|tiktok\.com)\/[^\s]+)").unwrap();
-        let mut links: Vec<String> = Vec::new();
-            
-        for cap in regex.find_iter(&message.content) {
-            let url = cap.as_str();
-
-            let modified_url = url
-                .replace("https://x.com", "https://fxtwitter.com")
-                .replace("https://twitter.com", "https://fxtwitter.com")
-                .replace("https://www.reddit.com", "https://rxddit.com")
-                .replace("https://reddit.com", "https://rxddit.com")
-                .replace("https://www.instagram.com", "https://ddinstagram.com")
-                .replace("https://instagram.com", "https://ddinstagram.com")
-                .replace("https://www.tiktok.com", "https://tfxktok.com")
-                .replace("https://tiktok.com", "https://tfxktok.com");
-
-            links.push(modified_url);
-        }
-
-        let message_id = message.id;
-        let channel_id = message.channel_id;
-
-        if !links.is_empty() {
-            let _ = channel_id.edit_message(_ctx.http(), message_id, EditMessage::new().suppress_embeds(true)).await;
-            let _ = message.reply(_ctx.http(), links.join("\n")).await;
+        if message.guild_id.unwrap().get() == 1353524385192869928 {
+            let regex = Regex::new(r"(https?:\/\/(?:www\.)?(x\.com|twitter\.com|reddit\.com|instagram\.com|tiktok\.com)\/[^\s]+)").unwrap();
+            let mut links: Vec<String> = Vec::new();
+                
+            for cap in regex.find_iter(&message.content) {
+                let url = cap.as_str();
+    
+                let modified_url = url
+                    .replace("https://x.com", "https://fxtwitter.com")
+                    .replace("https://twitter.com", "https://fxtwitter.com")
+                    .replace("https://www.reddit.com", "https://rxddit.com")
+                    .replace("https://reddit.com", "https://rxddit.com")
+                    .replace("https://www.instagram.com", "https://ddinstagram.com")
+                    .replace("https://instagram.com", "https://ddinstagram.com")
+                    .replace("https://www.tiktok.com", "https://tfxktok.com")
+                    .replace("https://tiktok.com", "https://tfxktok.com");
+    
+                links.push(modified_url);
+            }
+    
+            let message_id = message.id;
+            let channel_id = message.channel_id;
+    
+            if !links.is_empty() {
+                let _ = channel_id.edit_message(_ctx.http(), message_id, EditMessage::new().suppress_embeds(true)).await;
+                let _ = message.reply(_ctx.http(), links.join("\n")).await;
+            }
         }
     }
 
