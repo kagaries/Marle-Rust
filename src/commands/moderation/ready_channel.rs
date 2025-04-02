@@ -44,7 +44,7 @@ pub async fn ready_channel_command(
     let guild = client.query("SELECT * FROM guilds WHERE id = $1", &[&guild_id]).await?;
 
     if guild.is_empty() {
-        if remove.unwrap() == true {
+        if remove.unwrap_or(false) == true {
             ctx.send(CreateReply::default().content("No channel has been set.")).await?;
             return Ok(())
         } else {
@@ -57,7 +57,7 @@ pub async fn ready_channel_command(
         }
         
     } else {
-        if remove.unwrap() == true {
+        if remove.unwrap_or(false) == true {
             client.execute(
                 "UPDATE guilds SET ready_channel = '0' WHERE id = $1",
                 &[&guild_id],
