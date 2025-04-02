@@ -1,0 +1,8 @@
+[deploy]
+deny_dirty = true
+include = [
+  "Cargo.toml"
+]
+assets = [
+  "Cargo.toml"
+]
