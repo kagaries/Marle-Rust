@@ -18,7 +18,7 @@ pub async fn handle_ready_event(ctx: &serenity::Context, data_about_bot : &seren
     //Attempts to send the message "Bot is online!" to the target channel id.
     //On error it prints "Error sending message: " along with the reason for the error.
 
-    if let Err(why) = channel_id.say(ctx.http(), "Marle is online!").await {
+    if let Err(why) = channel_id.say(ctx.http(), format!("Marle is online! Last Commit: {}", std::env::var("LAST_COMMIT").unwrap())).await {
         println!("Error sending message: {:?}", why);
     }
 }
