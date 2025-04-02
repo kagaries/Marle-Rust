@@ -6,8 +6,14 @@ use ::serenity::all::{CacheHttp, EditMessage};
 //Events can have different variables, and will most likely never match each other.
 pub async fn handle_message_event(_ctx: &serenity::Context, message : &serenity::Message) {
 
+    let item = std::env::var("ALLOWED_SERVERS").ok().unwrap();
+
+    let array_values: Vec<&str> = item.split(',').collect();
+
+    
+
     if message.guild_id != None {
-        if message.guild_id.unwrap().get() == 1353524385192869928 {
+        if message.guild_id.unwrap().get() == 1354452978563551304 {
             let regex = Regex::new(r"(https?:\/\/(?:www\.)?(x\.com|twitter\.com|reddit\.com|instagram\.com|tiktok\.com)\/[^\s]+)").unwrap();
             let mut links: Vec<String> = Vec::new();
                 
