@@ -4,7 +4,9 @@ mod events;
 mod util;
 mod handlers;
 
-use git2::Repository;
+use std::{fs, path::Path};
+
+use git2::{Cred, FetchOptions, Oid, RemoteCallbacks, Repository};
 use handlers::event_handler::event_handler;
 use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
@@ -17,20 +19,31 @@ type Error = Box<dyn std::error::Error + Send + Sync>; //Main type used for erro
 type Context<'a> = poise::Context<'a, Data, Error>; //The context of the data being used.
 //The main shuttle runtime function, allows it to use content from Secrets.toml and deploy using shuttle.
 
-fn get_commit() -> Result<(), git2::Error> {
-    let repo = match Repository::open("/") {
+fn get_commit() {
+    let repo_url = "https://github.com/kagaries/Marle-Rust.git";
+    let repo_path = "/tmp/git2-rs";
+    let path = Path::new(repo_path);
+    if path.exists() {
+        // Remove the existing directory to ensure it's empty
+        if let Err(e) = fs::remove_dir_all(path) {
+            panic!("Failed to clear directory: {}", e);
+        }
+    }
+    let repo = match Repository::clone(repo_url, repo_path) {
         Ok(repo) => repo,
-        Err(e) => panic!("failed to open: {}", e),
+        Err(e) => panic!("Failed to clone: {}", e),
     };
-
-    let head= repo.head().unwrap();
-    let commit = head.peel_to_commit().unwrap();
-
-    let summary = commit.summary().unwrap();
-
-    std::env::set_var("LAST_COMMIT", summary);
-
-    Ok(())
+    let head = match repo.head() {
+        Ok(head) => head,
+        Err(e) => panic!("Failed to get head: {}", e),
+    };
+    let oid = head.target().unwrap();
+    let commit = match repo.find_commit(oid) {
+        Ok(commit) => commit,
+        Err(e) => panic!("Failed to find commit: {}", e),
+    };
+    let commit_hash = commit.summary().unwrap();
+    std::env::set_var("LAST_COMMIT", commit_hash);
 }
 
 
