@@ -7,7 +7,7 @@ mod handlers;
 use handlers::event_handler::event_handler;
 use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
-use commands::{fun::{say::say_command, uc::uc_command}, info::{age::age_command, info::info_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::blacklist::blacklist_command};
+use commands::{fun::{say::say_command, uc::uc_command}, info::{info::info_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::blacklist::blacklist_command};
 use poise::serenity_prelude as serenity;
 use util::remove_unused_commands;
 
@@ -50,7 +50,6 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle
 
     //A vector array of command functions to be put into the framework.
     let cmds: Vec<poise::Command<Data, Box<dyn std::error::Error + Send + Sync>>> = vec![
-        age_command(),
         serverinfo_command(),
         links_command(),
         uc_command(),

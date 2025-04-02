@@ -6,7 +6,7 @@ use crate::{Error, Context};
 pub async fn info_command(
     ctx: Context<'_>
 ) -> Result<(), Error> {
-    let embed = CreateEmbed::new().title("Marle").author(CreateEmbedAuthor::new("Kagaries (@kagaries)")).description("Just a simple bot made in rust.");
+    let embed = CreateEmbed::new().title("Marle").author(CreateEmbedAuthor::new("Kagaries (@kagaries)")).thumbnail(ctx.framework().bot_id.to_user(ctx.http()).await.unwrap().avatar_url().unwrap()).description("Just a simple bot made in rust.");
 
     ctx.send(CreateReply::default().embed(embed)).await?;
     

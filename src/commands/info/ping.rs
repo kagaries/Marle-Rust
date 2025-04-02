@@ -15,7 +15,7 @@ pub async fn ping_command(
     let start_time: Instant = Instant::now();
     
     //Sends a message and is set as a variable to be edited later.
-    let sent_msg: poise::ReplyHandle<'_> = ctx.say("Measuring ping...").await?;
+    let sent_msg: poise::ReplyHandle<'_> = ctx.send(CreateReply::default().content("Measuring ping...").ephemeral(true)).await?;
 
     //Gets the elapsed instant time as milliseconds (u128).
     let latency: u128 = start_time.elapsed().as_millis();
