@@ -36,7 +36,7 @@ pub async fn handle_ready_event(ctx: &serenity::Context, data_about_bot : &seren
                 
                 let actual_channel_id: ChannelId = ChannelId::new(channel_num);
 
-                if let Err(why) = actual_channel_id.say(ctx.http(), format!("Marle is online! Last Commit: ```\n{}\n```\nCurrent Version: ``{}``", std::env::var("LAST_COMMIT").unwrap(), env!("CARGO_PKG_VERSION"))).await {
+                if let Err(why) = actual_channel_id.say(ctx.http(), "Marle is online!\nUse ``/version`` for more info.").await {
                     println!("Error sending message: {:?}", why);
                 }
             }
@@ -45,5 +45,5 @@ pub async fn handle_ready_event(ctx: &serenity::Context, data_about_bot : &seren
 
     println!("Logged in as {}", data_about_bot.user.name);
 
-    ctx.set_presence(Some(ActivityData::custom("Hi")), serenity::OnlineStatus::Online);
+    ctx.set_presence(Some(ActivityData::playing("Rust")), serenity::OnlineStatus::Online);
 }
