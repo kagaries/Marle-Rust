@@ -36,7 +36,7 @@ pub async fn handle_ready_event(ctx: &serenity::Context, data_about_bot : &seren
                 
                 let actual_channel_id: ChannelId = ChannelId::new(channel_num);
 
-                if let Err(why) = actual_channel_id.say(ctx.http(), format!("Marle is online! Last Commit: {}", std::env::var("LAST_COMMIT").unwrap())).await {
+                if let Err(why) = actual_channel_id.say(ctx.http(), format!("Marle is online! Last Commit: ```\n{}\n```\nCurrent Version: ``{}``", std::env::var("LAST_COMMIT").unwrap(), env!("CARGO_PKG_VERSION"))).await {
                     println!("Error sending message: {:?}", why);
                 }
             }
