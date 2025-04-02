@@ -75,6 +75,7 @@ pub async fn execute(
     #[autocomplete = "execute_command_callback"]
     command: String,
 ) -> Result<(), OtherError> { 
+    ctx.defer().await?;
     let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
@@ -123,6 +124,25 @@ pub async fn create(
     let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
+
+    let table2 = client.query_one(
+        "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'commands')",
+        &[]
+    ).await?;
+
+    let table_exists2: bool = table2.get(0);
+
+    if table_exists2 != true {
+        client.execute(
+            "CREATE TABLE commands (
+                name TEXT PRIMARY KEY,
+                author TEXT,
+                toSend TEXT,
+                description TEXT,
+                created TEXT,
+                uses INTEGER
+            )", &[]).await?;
+    }
 
     let rows = client.query("SELECT * FROM commands WHERE name = $1", &[&name]).await?;
 
@@ -177,7 +197,7 @@ pub async fn remove(
     #[autocomplete = "remove_command_callback"]
     command: String
 ) -> Result<(), OtherError> {
-
+    ctx.defer().await?;
     let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
@@ -214,7 +234,7 @@ pub async fn remove(
 pub async fn wipe(
     ctx: Context<'_>
 ) -> Result<(), OtherError> {
-
+    ctx.defer().await?;
     let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
@@ -237,7 +257,7 @@ pub async fn getall(
     ctx: Context<'_>,
     user: User
 ) -> Result<(), OtherError> {
-
+    ctx.defer().await?;
     let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);
@@ -271,7 +291,7 @@ pub async fn get(
     #[autocomplete = "execute_command_callback"]
     command: String
 ) -> Result<(), OtherError> {
-
+    ctx.defer().await?;
     let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(conn);

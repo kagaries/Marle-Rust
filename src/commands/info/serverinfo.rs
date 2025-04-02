@@ -6,9 +6,10 @@ use crate::{Error, Context};
 pub async fn serverinfo_command(
     ctx: Context<'_>,
 ) -> Result<(), Error> {
+    ctx.defer().await?;
 
     let boost_level = match ctx.guild().as_ref().unwrap().premium_tier {
-        PremiumTier::Tier0 => "Level 0 (No Boosts)",
+        PremiumTier::Tier0 => "Level 0",
         PremiumTier::Tier1 => "Level 1",
         PremiumTier::Tier2 => "Level 2",
         PremiumTier::Tier3 => "Level 3",

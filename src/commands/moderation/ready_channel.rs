@@ -10,6 +10,8 @@ pub async fn ready_channel_command(
     ctx: Context<'_>,
     remove: Option<bool>
 ) -> Result<(), OtherError> {
+    ctx.defer().await?;
+
     let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
 
     spawn(async move {

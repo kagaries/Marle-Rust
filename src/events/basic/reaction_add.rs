@@ -24,6 +24,14 @@ pub async fn handle_reaction_add(ctx: &serenity::Context, reaction : &serenity::
                         }
                     }
                 }
+            } else {
+                if reaction.message(ctx.http()).await.unwrap().author.bot {
+                    if is_valid_url(&reaction.message(ctx.http()).await.unwrap().content).is_ok() {
+                        reaction.message(ctx.http()).await.unwrap().delete(ctx.http()).await.ok();
+                    } else {
+                        println!("Not a valid URL!");
+                    }
+                }
             }
         }
     }
