@@ -6,7 +6,7 @@ mod handlers;
 
 use std::{fs, path::Path};
 
-use git2::{Cred, FetchOptions, Oid, RemoteCallbacks, Repository};
+use git2::Repository;
 use handlers::event_handler::event_handler;
 use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
@@ -43,13 +43,13 @@ fn get_commit() {
         Err(e) => panic!("Failed to find commit: {}", e),
     };
     let commit_hash = commit.summary().unwrap();
-    std::env::set_var("LAST_COMMIT", commit_hash);
+    std::env::set_var("LAST_COMMIT", commit_hash );
 }
 
 
 #[shuttle_runtime::main]
 async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore, ) -> shuttle_serenity::ShuttleSerenity {
-    let _ = get_commit();
+    get_commit();
     std::env::set_var("RUST_BACKTRACE", "1");
     //Configure the client with your Discord bot token in the environment.
     let token: String = secrets.get("DISCORD_TOKEN").unwrap();
