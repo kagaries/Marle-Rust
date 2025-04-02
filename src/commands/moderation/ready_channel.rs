@@ -5,7 +5,7 @@ use poise::CreateReply;
 use tokio::spawn;
 use crate::{Error as OtherError, Context};
 
-#[poise::command(slash_command, description_localized("en-US", "Set if the ready message should be sent"), rename = "ready_channel")]
+#[poise::command(slash_command, description_localized("en-US", "Set if the ready message should be sent"), rename = "ready_channel", required_permissions = "MANAGE_GUILD")]
 pub async fn ready_channel_command(
     ctx: Context<'_>,
     remove: Option<bool>
