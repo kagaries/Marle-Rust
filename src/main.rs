@@ -18,7 +18,7 @@ type Context<'a> = poise::Context<'a, Data, Error>; //The context of the data be
 //The main shuttle runtime function, allows it to use content from Secrets.toml and deploy using shuttle.
 
 fn get_commit() -> Result<(), git2::Error> {
-    let repo = match Repository::open(".") {
+    let repo = match Repository::open("/") {
         Ok(repo) => repo,
         Err(e) => panic!("failed to open: {}", e),
     };
@@ -35,7 +35,7 @@ fn get_commit() -> Result<(), git2::Error> {
 
 
 #[shuttle_runtime::main]
-async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore,) -> shuttle_serenity::ShuttleSerenity {
+async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore, ) -> shuttle_serenity::ShuttleSerenity {
     let _ = get_commit();
     std::env::set_var("RUST_BACKTRACE", "1");
     //Configure the client with your Discord bot token in the environment.
