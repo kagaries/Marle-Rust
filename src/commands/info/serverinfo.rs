@@ -30,6 +30,7 @@ pub async fn serverinfo_command(
     .field("Boost Tier:", boost_level, true)
     .field("Role Amount:", ctx.guild().as_ref().unwrap().roles.capacity().to_string(), true)
     .field("Member Count:", non_bot_count.to_string(), true)
+    .image(ctx.guild().as_ref().unwrap().icon_url().unwrap_or("".to_string()))
     .footer(CreateEmbedFooter::new(format!("ID: {}", ctx.guild().as_ref().unwrap().id.get().to_string()))); 
 
     ctx.send(m.embed(embed)).await?;
