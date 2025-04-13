@@ -2,7 +2,7 @@ use std::{env, u64};
 
 use async_postgres::connect;
 use poise::serenity_prelude as serenity;
-use ::serenity::all::{ActivityData, CacheHttp, ChannelId};
+use ::serenity::all::{ActivityData, CacheHttp, ChannelId, Color, CreateEmbed, CreateMessage};
 use tokio::spawn;
 
 //The event called from the event_handler.
@@ -36,7 +36,7 @@ pub async fn handle_ready_event(ctx: &serenity::Context, data_about_bot : &seren
                 
                 let actual_channel_id: ChannelId = ChannelId::new(channel_num);
 
-                if let Err(why) = actual_channel_id.say(ctx.http(), "Marle is online!\nUse ``/version`` for more info.").await {
+                if let Err(why) = actual_channel_id.send_message(ctx.http(), CreateMessage::default().add_embed(CreateEmbed::default().title("Ready!").description("Marle is online!\nUse ``/version`` for more info.").color(Color::from_rgb(0, 255, 0)))).await {
                     println!("Error sending message: {:?}", why);
                 }
             }
