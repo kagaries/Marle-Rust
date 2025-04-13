@@ -7,7 +7,7 @@ use ::serenity::all::{CacheHttp, EditMessage};
 pub async fn handle_message_event(_ctx: &serenity::Context, message : &serenity::Message) {
 
     if message.guild_id != None {
-        if message.guild_id.unwrap() == 1356881715976470528 {
+        if message.guild_id.unwrap() != 1354452978563551304 {
             let regex = Regex::new(r"(https?:\/\/(?:www\.)?(x\.com|twitter\.com|reddit\.com|instagram\.com|tiktok\.com)\/[^\s]+)").unwrap();
             let mut links: Vec<String> = Vec::new();
                 
