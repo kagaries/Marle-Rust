@@ -18,6 +18,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build
       run: cargo build --verbose
+    - name: Install Shuttle
+      run: curl -sSfL https://www.shuttle.dev/install | bash
     - name: Stop last deployment
       run: shuttle deployment stop 
     - name: Deploy
