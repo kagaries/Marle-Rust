@@ -6,11 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-inputs:
-  shuttle-api-key:
-    description: The key found at https://console.shuttle.dev/account/overview
-    required: true
-
 env:
   CARGO_TERM_COLOR: always
 
@@ -27,5 +22,9 @@ jobs:
       run: cargo install cargo-shuttle
     - name: Stop last deployment
       run: shuttle deployment stop 
+      env:
+        SHUTTLE_API_KEY: ${{ secrets.SHUTTLE_API_KEY }}
     - name: Deploy
-      run: shuttle deploy
+      run: shuttle deploy --id proj_01JKYX5DMN5VDJEEKY123M6VVB
+      env:
+        SHUTTLE_API_KEY: ${{ secrets.SHUTTLE_API_KEY }}
