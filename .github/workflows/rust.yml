@@ -16,12 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      run: cargo build --verbose
     - name: Install Shuttle
       run: cargo install cargo-shuttle
     - name: Stop last deployment
-      run: shuttle deployment stop 
+      run: shuttle project link --id proj_01JKYX5DMN5VDJEEKY123M6VVB | shuttle deployment stop
       env:
         SHUTTLE_API_KEY: ${{ secrets.SHUTTLE_API_KEY }}
     - name: Deploy
