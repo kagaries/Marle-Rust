@@ -4,7 +4,7 @@ use poise::CreateReply;
 
 use crate::{Context, Error};
 
-#[poise::command(slash_command, description_localized("en-US", "Bot info embed thing"), rename = "version")]
+#[poise::command(slash_command, description_localized("en-US", "Get the latest commit and current version"), rename = "version")]
 pub async fn latest_commit_command(
     ctx: Context<'_>
 ) -> Result<(), Error> {
