@@ -19,7 +19,7 @@ jobs:
     - name: Build
       run: cargo build --verbose
     - name: Install Shuttle
-      run: curl -sSfL https://www.shuttle.dev/install | bash
+      run: cargo install cargo-shuttle
     - name: Stop last deployment
       run: shuttle deployment stop 
     - name: Deploy
