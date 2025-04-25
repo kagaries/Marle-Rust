@@ -1,6 +1,6 @@
 [package]
 name = "marle-rust"
-version = "0.0.221"
+version = "0.2.21"
 authors = ["Kagaries <kagarieswinnfield@gmail.com>"]
 edition = "2018"
 
