@@ -90,7 +90,6 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore, ) -> shuttl
         ping_command(),
         blacklist_command(),
         info_command(),
-        say_command(),
         ready_channel_command(),
         latest_commit_command()
     ];
