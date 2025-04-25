@@ -7,7 +7,6 @@ use ::serenity::all::{CacheHttp, EditMessage};
 pub async fn handle_message_event(_ctx: &serenity::Context, message : &serenity::Message) {
 
     if message.guild_id != None {
-        if message.guild_id.unwrap() != 1354452978563551304 {
             let regex = Regex::new(r"(https?:\/\/(?:www\.)?(x\.com|twitter\.com|reddit\.com|instagram\.com|tiktok\.com)\/[^\s]+)").unwrap();
             let mut links: Vec<String> = Vec::new();
                 
@@ -34,7 +33,6 @@ pub async fn handle_message_event(_ctx: &serenity::Context, message : &serenity:
                 let _ = channel_id.edit_message(_ctx.http(), message_id, EditMessage::new().suppress_embeds(true)).await;
                 let _ = message.reply(_ctx.http(), links.join("\n")).await;
             }
-        }
     }
 
     //println!("Logged in as {}", data_about_bot.user.name);
