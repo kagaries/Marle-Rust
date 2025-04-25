@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
+inputs:
+  shuttle-api-key:
+    description: The key found at https://console.shuttle.dev/account/overview
+    required: true
+
 env:
   CARGO_TERM_COLOR: always
 
