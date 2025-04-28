@@ -7,11 +7,15 @@ mod handlers;
 use std::{fs, path::Path};
 
 use git2::Repository;
+
 use handlers::event_handler::event_handler;
+
 use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
-use commands::{fun::uc::uc_command, info::{info::info_command, latest_commit::latest_commit_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::{blacklist::blacklist_command, ready_channel::ready_channel_command}};
 use poise::serenity_prelude as serenity;
+
+use commands::{fun::uc::uc_command, info::{info::info_command, latest_commit::latest_commit_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::{blacklist::blacklist_command, ready_channel::ready_channel_command}};
+
 use util::remove_unused_commands;
 
 pub struct Data {} // User data, which is stored and accessible in all command invocations.
