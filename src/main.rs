@@ -14,7 +14,7 @@ use ::serenity::all::GatewayIntents;
 use shuttle_runtime::SecretStore;
 use poise::serenity_prelude as serenity;
 
-use commands::{fun::uc::uc_command, info::{info::info_command, latest_commit::latest_commit_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::{blacklist::blacklist_command, ready_channel::ready_channel_command}};
+use commands::{fun::uc::uc_command, info::{info::info_command, latest_commit::latest_commit_command, links::links_command, ping::ping_command, serverinfo::serverinfo_command}, moderation::{blacklist::blacklist_command, test::test_command, ready_channel::ready_channel_command}};
 
 use util::remove_unused_commands;
 
@@ -95,7 +95,8 @@ async fn serenity( #[shuttle_runtime::Secrets] secrets: SecretStore, ) -> shuttl
         blacklist_command(),
         info_command(),
         ready_channel_command(),
-        latest_commit_command()
+        latest_commit_command(),
+        test_command()
     ];
 
     //The poise framework to load the commands and event handler for use with the bot.
