@@ -5,6 +5,34 @@ use ::serenity::all::{CacheHttp, EditMessage};
 //The event called from the event_handler.
 //Events can have different variables, and will most likely never match each other.
 pub async fn handle_message_event(_ctx: &serenity::Context, message : &serenity::Message) {
+    
+    let (client, conn) = connect(env::var("DB_LINK").unwrap().parse()?).await?;
+
+    spawn(conn);
+    
+    let table = client.query_one(
+        "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'blacklist')",
+        &[]
+    ).await?;
+
+    let table_exists: bool = table.get(0);
+
+    if table_exists == true {
+        let blacklist = client.query("SELECT * FROM blacklist WHERE id = $1", &[&ctx.author().id.to_string()]).await?;
+
+        if let Some(_blacklist) = blacklist.get(0) {
+            return Ok(());
+        }
+    } else {
+        print!("done!");
+        client.execute(
+            "CREATE TABLE blacklist (
+                id TEXT PRIMARY KEY
+            )",
+            &[],
+        )
+        .await?;
+    }
 
     if message.guild_id != None {
             let regex = Regex::new(r"(https?:\/\/(?:www\.)?(x\.com|twitter\.com|reddit\.com|instagram\.com|tiktok\.com)\/[^\s]+)").unwrap();
